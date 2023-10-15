@@ -1,12 +1,11 @@
-import { fetchUsers } from "actions/users";
+import { fetchUsers, filterUsers } from "actions/users";
 import { Space } from "antd";
 import ActionBar from "components/ActionBar";
 import UserTable from "components/Table";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import styled from "styled-components";
-import { User } from "types/users";
 
 const Section = styled.section`
   max-width: 1024px;
@@ -22,12 +21,15 @@ const UserList = () => {
   const dispatch = useDispatch();
 
   const users = useSelector((state: RootState) => state.users);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>(users.data);
+  const setFilteredUsers = (value: string) => {
+    dispatch(filterUsers(value));
+  };
+
   useEffect(() => {
     dispatch(fetchUsers());
   }, [dispatch]);
 
-  const { data, error, loading } = users;
+  const { data, error, loading, filteredUsers } = users;
 
   return (
     <Section>

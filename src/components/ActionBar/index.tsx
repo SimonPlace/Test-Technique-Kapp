@@ -2,7 +2,6 @@ import { Button, Flex, Space } from "antd";
 import Filters from "components/Filters";
 import PlusIcon from "icons/plus";
 import { debounce } from "lodash";
-import { Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 import { User } from "types/users";
 
@@ -10,7 +9,7 @@ type ActionBarProps = {
   users: User[];
   primaryAction: () => void;
   secondaryAction: () => void;
-  setFilteredUsers: Dispatch<SetStateAction<User[]>>;
+  setFilteredUsers: (value: string) => void;
 };
 
 const Users = styled.h2`
@@ -43,13 +42,16 @@ const ActionBar = ({
 }: ActionBarProps) => {
   const groupOptions = getGroup(users);
 
-  const filterUsers = debounce((event: React.ChangeEvent<HTMLInputElement>) => {
-    const {
-      target: { value },
-    } = event;
+  const filterUsersEvent = debounce(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const {
+        target: { value },
+      } = event;
 
-    return value;
-  }, 500);
+      setFilteredUsers(value);
+    },
+    500
+  );
 
   return (
     <>
@@ -68,7 +70,7 @@ const ActionBar = ({
         </div>
       </ButtonBar>
 
-      <Filters group={groupOptions} setFilteredUsers={filterUsers} />
+      <Filters group={groupOptions} setFilteredUsers={filterUsersEvent} />
     </>
   );
 };

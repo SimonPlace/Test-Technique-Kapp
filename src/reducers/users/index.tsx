@@ -3,12 +3,14 @@ import { User } from "types/users";
 
 interface initialStateType {
   data: User[];
+  filteredUsers: User[];
   loading: boolean;
   error: string | null;
 }
 
 const initialState: initialStateType = {
   data: [],
+  filteredUsers: [],
   error: null,
   loading: false,
 };
@@ -29,9 +31,25 @@ const userSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
+    setFilteredUsers: (state, action: PayloadAction<User[]>) => {
+      state.filteredUsers = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
+    clearFilters: (state) => {
+      state.filteredUsers = [];
+      state.loading = false;
+      state.error = null;
+    },
   },
 });
 
-export const { setUsers, setLoading, setError } = userSlice.actions;
+export const {
+  setUsers,
+  setLoading,
+  setError,
+  setFilteredUsers,
+  clearFilters,
+} = userSlice.actions;
 
 export default userSlice.reducer;
