@@ -1,3 +1,4 @@
+import Header from "components/Header";
 import { Provider } from "react-redux";
 import store from "store";
 import Theme from "./theme";
@@ -5,7 +6,9 @@ import Theme from "./theme";
 function App() {
   return (
     <Provider store={store}>
-      <Theme>Hello World</Theme>
+      <Theme>
+        <Header />
+      </Theme>
     </Provider>
   );
 }
