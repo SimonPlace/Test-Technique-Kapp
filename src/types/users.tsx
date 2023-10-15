@@ -6,5 +6,5 @@ export interface User {
   groups: Array<string>;
   access: Array<string>;
   last_login: number;
-  id: number;
+  id: string;
 }

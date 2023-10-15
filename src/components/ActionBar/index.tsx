@@ -1,16 +1,10 @@
 import { Button, Flex, Space } from "antd";
 import Filters from "components/Filters";
+
 import PlusIcon from "icons/plus";
-import { debounce } from "lodash";
+import { CSVLink } from "react-csv";
 import styled from "styled-components";
 import { User } from "types/users";
-
-type ActionBarProps = {
-  users: User[];
-  primaryAction: () => void;
-  secondaryAction: () => void;
-  setFilteredUsers: (value: string) => void;
-};
 
 const Users = styled.h2`
   font-weight: 600;
@@ -34,24 +28,24 @@ const getGroup = (data: User[]) => {
   });
 };
 
+type ActionBarProps = {
+  users: User[];
+  setFilteredUsers: (value: string) => void;
+  setFilterGroups: (groups: Array<string>) => void;
+  setVisible: (visible: boolean) => void;
+};
+
 const ActionBar = ({
   users,
-  primaryAction,
-  secondaryAction,
   setFilteredUsers,
+  setFilterGroups,
+  setVisible,
 }: ActionBarProps) => {
   const groupOptions = getGroup(users);
 
-  const filterUsersEvent = debounce(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const {
-        target: { value },
-      } = event;
-
-      setFilteredUsers(value);
-    },
-    500
-  );
+  const filterUsersEvent = (value: string) => {
+    setFilteredUsers(value);
+  };
 
   return (
     <>
@@ -59,8 +53,10 @@ const ActionBar = ({
         <Users>Users {users.length > 0 && `(${users.length})`} </Users>
         <div>
           <Space>
-            <Button onClick={primaryAction}>Export List</Button>
-            <Button type="primary" onClick={secondaryAction}>
+            <CSVLink filename="KapptivateExport" data={users}>
+              <Button>Export List</Button>
+            </CSVLink>
+            <Button type="primary" onClick={() => setVisible(true)}>
               <Space>
                 <PlusIcon />
                 Add User
@@ -69,8 +65,11 @@ const ActionBar = ({
           </Space>
         </div>
       </ButtonBar>
-
-      <Filters group={groupOptions} setFilteredUsers={filterUsersEvent} />
+      <Filters
+        setFilterGroups={setFilterGroups}
+        group={groupOptions}
+        setFilteredUsers={filterUsersEvent}
+      />
     </>
   );
 };
